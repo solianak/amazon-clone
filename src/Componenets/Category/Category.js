@@ -20,11 +20,3 @@ export default Category;
 
 
 
-
-
-//export async function getServerSideProps(context){
-//const Category=await fetch("https://fakestoreapi.com/products") .then((res=>res.json()); return { props: Category{
-
-// }}}
-
-//get>> https://fakestoreapi.com/products

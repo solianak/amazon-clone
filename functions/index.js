@@ -32,6 +32,7 @@ app.post("/payment/create", async (req, res) => {
         clientSecret: paymentIntent.client_secret,
       });
     } catch (error) {
+      logger.error("Error creating payment intent:", error.message);
       res.status(500).json({
         message: "Internal Server Error",
         error: error.message,

@@ -29,7 +29,7 @@ const Payment = () => {
   const navigate = useNavigate()
   
   const handleChange = (e) => {
-    // console.log(e);
+  
     setcardError(e.error ? e.error.message : "");
   };
 
@@ -37,21 +37,27 @@ const Payment = () => {
     e.preventDefault();
       try {
         setProcessing(true);
+
         //1.backend||functions ---conatct the client secret
 
         const response = await axiosInstance({
           method: "POST",
           url: `payment/create?total=${total * 100}`,
         });
-        // console.log(response.data);
+             console.log("Response from backend:", response.data);
 
-        const clientSecret = response.data?.clientSecret;
+
+       const clientSecret = response.data?.client_secret;
+            if (!clientSecret) {
+              throw new Error("Client secret not found");
+            }
         //2.client side (react side confirmation)
         const { paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
             card: elements.getElement(CardElement),
           },
         });
+           
     
         //3.after the confirmation--order firestore database save, clear basket
          const userDoc = doc(collection(db, "users"), user.uid);
@@ -62,7 +68,7 @@ const Payment = () => {
            created: paymentIntent.created,
          });
           
-    //  empty the basket
+    //  Empty the basket
     dispatch({ type:Type.EMPTY_BASKET });
      setProcessing(false);
          navigate("/orders", { state: {msg: "you have placed new order" } });
@@ -76,10 +82,10 @@ const Payment = () => {
     <LayOut>
       {/* Header */}
       <div className={classes.payment_header}>Checkout({totalItem}) items</div>
-      {/* payment method */}
+      {/* Payment method */}
 
       <section className={classes.payment}>
-        {/* address */}
+        {/* Address */}
         <div className={classes.flex}>
           <h3>Delivery Address</h3>
           <div>
@@ -127,7 +133,7 @@ const Payment = () => {
                       <p> Total Order |</p> <CurrencyFormat amount={total} />
                     </span>
                   </div>
-                  <button type="submit">
+                  <button type="submit" disabled={processing}>
                     {processing ? (
                       <div className={classes.loading}>
                         <ClipLoader color="gray" size={12} />

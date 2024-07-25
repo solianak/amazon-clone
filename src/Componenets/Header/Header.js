@@ -49,7 +49,7 @@ const Header = () => {
                 <option value="">All</option>
               </select>
               <input type="text" placeholder="Search Amazon" />
-              <BsSearch size={52} />
+              <BsSearch size={54} />
             </div>
 
             {/* Language and other section*/}
@@ -83,7 +83,7 @@ const Header = () => {
                 <span> & Orders</span>
               </Link>
               <Link to="/cart" className={classes.cart}>
-                <BiCart size={35} />
+                <BiCart size={38} />
                 <span>{totalItem}</span>
               </Link>
             </div>
